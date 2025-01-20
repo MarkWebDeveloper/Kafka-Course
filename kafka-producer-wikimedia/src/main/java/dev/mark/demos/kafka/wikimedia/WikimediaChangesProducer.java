@@ -5,6 +5,7 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import com.launchdarkly.eventsource.EventHandler;
@@ -18,10 +19,15 @@ public class WikimediaChangesProducer {
         // connect to Kafka
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", bootstrapServers);
-        properties.setProperty("acks", "all");
-        properties.setProperty("log.level", "DEBUG");
         properties.setProperty("key.serializer", StringSerializer.class.getName());
         properties.setProperty("value.serializer", StringSerializer.class.getName());
+
+        // safe producer for Kafka < 3.0
+        properties.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+        properties.setProperty(ProducerConfig.ACKS_CONFIG, "all");
+        properties.setProperty(ProducerConfig.RETRIES_CONFIG, Integer.toString(Integer.MAX_VALUE));
+
+        properties.setProperty("log.level", "DEBUG");
 
         KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
 
