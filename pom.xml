@@ -15,6 +15,7 @@
 	<modules>
 		<module>kafka-basics</module>
 		<module>kafka-producer-wikimedia</module>
+		<module>kafka-consumer-opensearch</module>
 	</modules>
 	<name>kafka-course</name>
 	<description>Demo project for Spring Boot</description>
